@@ -6,10 +6,10 @@ import requests_cache
 from bs4 import BeautifulSoup
 from tqdm import tqdm
 
-from constants import BASE_DIR, MAIN_DOC_URL, PEP_URL, EXPECTED_STATUS
+from constants import BASE_DIR, MAIN_DOC_URL, PEP_URL
 from configs import configure_argument_parser, configure_logging
 from outputs import control_output
-from utils import get_response, find_tag
+from utils import get_response, find_tag, find_status
 
 
 def whats_new(session):
@@ -99,7 +99,7 @@ def pep(session):
     total = 0
     for tr_tag in tqdm(tr_tags):
         first_column_tag = tr_tag.find('td')
-        preview_status = EXPECTED_STATUS[first_column_tag.text[1:]]
+        preview_status = find_status(first_column_tag.text[1:])
         current_pep_link = find_tag(
             tr_tag, 'a', {'class': 'pep reference internal'}
             )['href']

@@ -3,6 +3,8 @@ import logging
 from requests import RequestException
 from exceptions import ParserFindTagException
 
+from constants import EXPECTED_STATUS
+
 
 def get_response(session, url):
     try:
@@ -23,3 +25,15 @@ def find_tag(soup, tag, attrs=None):
         logging.error(error_msg, stack_info=True)
         raise ParserFindTagException(error_msg)
     return searched_tag
+
+
+def find_status(key):
+    try:
+        preview_status = EXPECTED_STATUS[key]
+    except KeyError:
+        preview_status = ('Unexpected', )
+        logging.exception(
+            f'Возникла ошибка при поиске статуса {key}',
+            stack_info=True
+        )
+    return preview_status
